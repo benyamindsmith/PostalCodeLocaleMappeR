@@ -47,4 +47,6 @@ areasm<-pipeit(main_links[10],"td:nth-child(2)")[-c(288:292)]
 
 ##Now lets build a data set
 
-Ontario_ds<-data.frame(c(unlist(pcd),pcdm),c(unlist(areas),areasm))
+Ontario_ds<-data.frame("Area Code"=c(unlist(pcd),pcdm),
+                       "Locale"=c(unlist(areas),areasm))
+Ontario_ds<-Ontario_ds[order(Ontario_ds$Area.Code),]
