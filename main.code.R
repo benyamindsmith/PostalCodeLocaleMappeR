@@ -158,17 +158,23 @@ ypca_scrape<-function(url){
   dt 
 }
 
-###Music  in Ontario
-dat<-ypca_scrape("https://www.yellowpages.ca/search/si/1/music+stores/Ontario+ON")
-
-d1<-unlist(dat[,1])
-d2<-unlist(dat[,2])
-d3<-unlist(dat[,3])
-d4<-unlist(dat[,4])
-d5<-unlist(dat[,5])
-
-dt<-tibble(d1,d2,d3,d4,d5)
-
+# ###Music  in Ontario
+# dat<-ypca_scrape("https://www.yellowpages.ca/search/si/1/music+stores/Ontario+ON")
+# 
+# d1<-unlist(dat[,1])
+# d2<-unlist(dat[,2])
+# d3<-unlist(dat[,3])
+# d4<-unlist(dat[,4])
+# d5<-unlist(dat[,5])
+# 
+# dt<-tibble(d1,d2,d3,d4,d5)
+# 
 
 ##
+dt<-read.csv("Music Stores Ontario.csv")
 library(plyr)
+
+dt$postal_codes<-get_postal_codes(dt$d2)
+
+#needs work
+ind<-sapply(Ontario_ds$Area.Code,function(x) grep(x,dt$postal_codes))
