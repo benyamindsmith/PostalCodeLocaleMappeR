@@ -171,15 +171,18 @@ ypca_scrape<-function(url){
 # 
 
 # ##
-# dt<-read.csv("Music Stores Ontario.csv")
-# library(plyr)
+dt<-read.csv("Music Stores Ontario.csv")
+library(plyr)
 
-                                   
-##This is with the Kollel's Data Set.                                   
-dt<-dff
+dt$postal_codes<-get_postal_codes(dt$d2)
 
-dt$postal_codes<-get_postal_codes(dt$Address)
 
+###This is with the Kollel's Data Set.                                   
+# dt<-dff
+# 
+# dt$postal_codes<-get_postal_codes(dt$Address)
+####
+dt$d2[dt$d2=="character(0)",]<-NA
 dt$postal_codes[dt$postal_codes=="character(0)"]<-NA
 
 dt$postal_codes<-unlist(dt$postal_codes)
@@ -187,9 +190,37 @@ dt$postal_codes<-unlist(dt$postal_codes)
 dt$fsa<-str_extract_all(dt$postal_codes,"[A-Z][0-9][A-Z]")
 dt$fsa<-unlist(dt$fsa)
 #needs work
-ind<-sapply(Ontario_ds$Area.Code,function(x) grepl(x,dt$postal_codes))
+# ind<-sapply(Ontario_ds$Area.Code,function(x) grepl(x,dt$postal_codes))
 
-dtt<-merge(dt,
-      Ontario_ds,
-      by.x='fsa',
-      by.y='Area.Code')
+
+ind<-match(dt$fsa,Ontario_ds$Area.Code)
+
+locale<-sapply(ind,function(x) Ontario_ds$Locale[x])
+
+dt$Locale<-locale
+
+
+#########Now to write the function#########
+
+Ontario_PC_MappeR<-function(addresses){
+  
+  require(readr)
+  ##First lets attach the Ontario Postal Codes Data set##
+  Ontario_ds<-read.csv(url("https://raw.githubusercontent.com/benyamindsmith/PostalCodeLocaleMappeR/master/Ontario%20Postal%20Code%20Dataset.csv?token=ALCCTHSDAGXRODXBPOQHSRC6AJDAS"))
+  
+  ##Now lets get our required functions
+  get_postal_codes<-function(x){
+    str_extract_all(x,
+                    "[ABCEGHJKLMNPRSTVXY]\\d[ABCEGHJ-NPRSTV-Z][ ]?\\d[ABCEGHJ-NPRSTV-Z]\\d")
+  }
+  
+  ##Lets extract the Postal Codes
+  
+  pc<-get_postal_codes(addresses)
+  
+  ##Get FSAs
+  fsa<-str_extract_all(dt$postal_codes,"[A-Z][0-9][A-Z]")
+  
+  ##Now match
+  
+}
