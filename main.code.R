@@ -170,11 +170,26 @@ ypca_scrape<-function(url){
 # dt<-tibble(d1,d2,d3,d4,d5)
 # 
 
-##
-dt<-read.csv("Music Stores Ontario.csv")
-library(plyr)
+# ##
+# dt<-read.csv("Music Stores Ontario.csv")
+# library(plyr)
 
-dt$postal_codes<-get_postal_codes(dt$d2)
+                                   
+##This is with the Kollel's Data Set.                                   
+dt<-dff
 
+dt$postal_codes<-get_postal_codes(dt$Address)
+
+dt$postal_codes[dt$postal_codes=="character(0)"]<-NA
+
+dt$postal_codes<-unlist(dt$postal_codes)
+
+dt$fsa<-str_extract_all(dt$postal_codes,"[A-Z][0-9][A-Z]")
+dt$fsa<-unlist(dt$fsa)
 #needs work
-ind<-sapply(Ontario_ds$Area.Code,function(x) grep(x,dt$postal_codes))
+ind<-sapply(Ontario_ds$Area.Code,function(x) grepl(x,dt$postal_codes))
+
+dtt<-merge(dt,
+      Ontario_ds,
+      by.x='fsa',
+      by.y='Area.Code')
