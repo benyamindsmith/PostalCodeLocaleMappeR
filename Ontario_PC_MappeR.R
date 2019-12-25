@@ -2,6 +2,7 @@
 Ontario_PC_MappeR<-function(addresses){
   
   require(readr)
+  require(stringr)
   ##First lets attach the Ontario Postal Codes Data set##
   Ontario_ds<-read.csv(url("https://raw.githubusercontent.com/benyamindsmith/PostalCodeLocaleMappeR/master/Ontario%20Postal%20Code%20Dataset.csv?token=ALCCTHSDAGXRODXBPOQHSRC6AJDAS"))
   
